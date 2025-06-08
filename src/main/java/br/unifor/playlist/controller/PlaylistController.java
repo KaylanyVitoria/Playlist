@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import br.unifor.playlist.model.Playlist;
 import br.unifor.playlist.repository.PlaylistRepository;
+import br.unifor.playlist.service.MusicaService;
+import br.unifor.playlist.model.Musica;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "")
 @RestController
 @RequestMapping("/api/playlists")
 public class PlaylistController {
@@ -17,6 +19,13 @@ public class PlaylistController {
     @Autowired
     private PlaylistRepository repository;
 
+    @Autowired
+    private MusicaService musicaService;
+
+    @GetMapping("/musicas")
+    public Musica[] getMusicas() {
+        return musicaService.listarMusicas();
+    }
 
     @PostMapping
     public ResponseEntity<Playlist> criarPlaylist(@RequestBody Playlist playlist) {
@@ -26,8 +35,6 @@ public class PlaylistController {
         Playlist salva = repository.save(playlist);
         return ResponseEntity.status(201).body(salva);
     }
-
-
     @GetMapping
     public List<Playlist> listarPlaylists() {
         return repository.findAll();
