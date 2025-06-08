@@ -66,4 +66,13 @@ public class PlaylistController {
         repository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+    @PostMapping("/{playlistId}/musicas")
+    public ResponseEntity<Playlist> adicionarMusica(@PathVariable String playlistId, @RequestBody Musica musica) {
+        return repository.findById(playlistId).map(playlist -> {
+            playlist.getMusicas().add(musica.getId()); // apenas o ID
+            repository.save(playlist);
+            return ResponseEntity.ok(playlist);
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
 }
