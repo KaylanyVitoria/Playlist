@@ -12,8 +12,8 @@ public class Playlist {
     private String id;
     private String nome;
     private String descricao;
-    private String cover; // URL da imagem de capa
-    private List<String> musicas; // Lista de IDs de músicas
+    private String cover;
+    private List<String> musicas;
 
     public Playlist() {}
 
