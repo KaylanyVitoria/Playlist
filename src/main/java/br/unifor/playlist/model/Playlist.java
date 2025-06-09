@@ -3,6 +3,7 @@ package br.unifor.playlist.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "playlists")
@@ -13,7 +14,7 @@ public class Playlist {
     private String nome;
     private String descricao;
     private String cover;
-    private List<String> musicas;
+    private List<String> musicas = new ArrayList<>();
 
     public Playlist() {}
 
@@ -24,18 +25,43 @@ public class Playlist {
         this.musicas = musicas;
     }
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public String getId() {
+        return id;
+    }
 
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public String getDescricao() { return descricao; }
-    public void setDescricao(String descricao) { this.descricao = descricao; }
+    public String getNome() {
+        return nome;
+    }
 
-    public String getCover() { return cover; }
-    public void setCover(String cover) { this.cover = cover; }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-    public List<String> getMusicas() { return musicas; }
-    public void setMusicas(List<String> musicas) { this.musicas = musicas; }
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public List<String> getMusicas() {
+        return musicas;
+    }
+
+    public void setMusicas(List<String> musicas) {
+        this.musicas = musicas;
+    }
 }

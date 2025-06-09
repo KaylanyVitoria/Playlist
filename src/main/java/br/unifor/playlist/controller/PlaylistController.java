@@ -1,6 +1,7 @@
 package br.unifor.playlist.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,7 @@ import br.unifor.playlist.repository.PlaylistRepository;
 import br.unifor.playlist.service.MusicaService;
 import br.unifor.playlist.model.Musica;
 
-@CrossOrigin(origins = "")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/playlists")
 public class PlaylistController {
@@ -66,13 +67,30 @@ public class PlaylistController {
         repository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-    @PostMapping("/{playlistId}/musicas")
-    public ResponseEntity<Playlist> adicionarMusica(@PathVariable String playlistId, @RequestBody Musica musica) {
-        return repository.findById(playlistId).map(playlist -> {
-            playlist.getMusicas().add(musica.getId()); // apenas o ID
-            repository.save(playlist);
-            return ResponseEntity.ok(playlist);
-        }).orElse(ResponseEntity.notFound().build());
-    }
 
+    @PostMapping("/{playlistId}/musicas")
+    public ResponseEntity<?> adicionarMusica(@PathVariable String playlistId, @RequestBody Map<String, String> body) {
+        String musicaId = body.get("musicaId");
+
+        if (musicaId == null || musicaId.isBlank()) {
+            return ResponseEntity.badRequest().body("O campo 'musicaId' é obrigatório.");
+        }
+
+        try {
+            Musica musica = musicaService.buscarMusicaPorId(musicaId);
+            if (musica == null) {
+                return ResponseEntity.status(404).body("Música com o ID " + musicaId + " não encontrada.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(503).body("Serviço de músicas indisponível.");
+        }
+
+        return repository.findById(playlistId).map(playlist -> {
+            if (!playlist.getMusicas().contains(musicaId)) {
+                playlist.getMusicas().add(musicaId);
+                repository.save(playlist);
+            }
+            return ResponseEntity.ok(playlist);
+        }).orElse(ResponseEntity.status(404).body("Playlist com o ID " + playlistId + " não encontrada."));
+    }
 }
