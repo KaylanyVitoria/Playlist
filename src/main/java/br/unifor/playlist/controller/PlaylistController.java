@@ -69,7 +69,7 @@ public class PlaylistController {
     }
 
     @PostMapping("/{playlistId}/musicas")
-    public ResponseEntity<?> adicionarMusica(@PathVariable String playlistId, @RequestBody Map<String, String> body) {
+    public ResponseEntity<Object> adicionarMusica(@PathVariable String playlistId, @RequestBody Map<String, String> body) {
         String musicaId = body.get("musicaId");
 
         if (musicaId == null || musicaId.isBlank()) {
@@ -90,7 +90,8 @@ public class PlaylistController {
                 playlist.getMusicas().add(musicaId);
                 repository.save(playlist);
             }
-            return ResponseEntity.ok(playlist);
+            return ResponseEntity.ok((Object) playlist);
         }).orElse(ResponseEntity.status(404).body("Playlist com o ID " + playlistId + " não encontrada."));
     }
+
 }
